@@ -1,0 +1,2 @@
+com/DefaultCompany/WatchProj/BuildConfig.java
+ com.DefaultCompany.WatchProj.BuildConfig
