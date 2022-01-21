@@ -80,6 +80,7 @@ public class UnityPlayerActivity extends Activity implements IUnityPlayerLifecyc
                     @Override
                     public void run() {
                         linearLayout.setVisibility(View.VISIBLE);
+                        linearLayout.bringToFront();
                         Log.d("a", "JEO TE ISS");
                     }
                 }, 1500);
@@ -99,8 +100,9 @@ public class UnityPlayerActivity extends Activity implements IUnityPlayerLifecyc
                     @Override
                     public void run() {
                         linearLayout.setVisibility(View.VISIBLE);
+                        linearLayout.bringToFront();
                     }
-                }, 1500);
+                }, 3300);
             }
         });
 
