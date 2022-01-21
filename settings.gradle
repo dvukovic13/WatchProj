@@ -10,3 +10,6 @@ rootProject.name = "JumpOrDie"
 include ':app'
 include ':unityLibrary'
 include ':launcher'
+include ':unityLibraryNew'
+include ':unityLibrary'
+include ':launcher'

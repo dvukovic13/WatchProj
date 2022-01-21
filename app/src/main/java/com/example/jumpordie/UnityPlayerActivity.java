@@ -6,16 +6,28 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
+import android.os.Debug;
+import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.os.Process;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
+import androidx.wear.widget.BoxInsetLayout;
+
+import com.example.jumpordie.R;
 import com.unity3d.player.IUnityPlayerLifecycleEvents;
+import com.unity3d.player.MultiWindowSupport;
 import com.unity3d.player.UnityPlayer;
 
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class UnityPlayerActivity extends Activity implements IUnityPlayerLifecycleEvents
 {
@@ -43,8 +55,56 @@ public class UnityPlayerActivity extends Activity implements IUnityPlayerLifecyc
         getIntent().putExtra("unity", cmdLine);
 
         mUnityPlayer = new UnityPlayer(this, this);
-        setContentView(mUnityPlayer);
+        setContentView(R.layout.activity_unity);
+
+        FrameLayout frameLayout = (FrameLayout)findViewById(R.id.unity_layout);
+        frameLayout.addView(mUnityPlayer.getView());
+
+        LinearLayout linearLayout = (LinearLayout)findViewById(R.id.buttons_layout);
+
         mUnityPlayer.requestFocus();
+
+
+
+
+        Button jump = (Button)findViewById(R.id.bJump);
+        jump.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UnityPlayer.UnitySendMessage("Controller", "runAnimExtern", "Jump");
+
+                //jump.setVisibility(View.INVISIBLE);
+                Handler handler = new Handler();
+                linearLayout.setVisibility(View.INVISIBLE);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        linearLayout.setVisibility(View.VISIBLE);
+                        Log.d("a", "JEO TE ISS");
+                    }
+                }, 1500);
+
+            }
+        });
+
+        Button die = (Button) findViewById(R.id.bDie);
+        die.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UnityPlayer.UnitySendMessage("Controller", "runAnimExtern", "Death");
+
+                linearLayout.setVisibility(View.INVISIBLE);
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        linearLayout.setVisibility(View.VISIBLE);
+                    }
+                }, 1500);
+            }
+        });
+
+
     }
 
     // When Unity player unloaded move task to background
@@ -73,10 +133,38 @@ public class UnityPlayerActivity extends Activity implements IUnityPlayerLifecyc
         super.onDestroy();
     }
 
+    // If the activity is in multi window mode or resizing the activity is allowed we will use
+    // onStart/onStop (the visibility callbacks) to determine when to pause/resume.
+    // Otherwise it will be done in onPause/onResume as Unity has done historically to preserve
+    // existing behavior.
+    @Override protected void onStop()
+    {
+        super.onStop();
+
+        if (!MultiWindowSupport.getAllowResizableWindow(this))
+            return;
+
+        mUnityPlayer.pause();
+    }
+
+    @Override protected void onStart()
+    {
+        super.onStart();
+
+        if (!MultiWindowSupport.getAllowResizableWindow(this))
+            return;
+
+        mUnityPlayer.resume();
+    }
+
     // Pause Unity
     @Override protected void onPause()
     {
         super.onPause();
+
+        if (MultiWindowSupport.getAllowResizableWindow(this))
+            return;
+
         mUnityPlayer.pause();
     }
 
@@ -84,6 +172,10 @@ public class UnityPlayerActivity extends Activity implements IUnityPlayerLifecyc
     @Override protected void onResume()
     {
         super.onResume();
+
+        if (MultiWindowSupport.getAllowResizableWindow(this))
+            return;
+
         mUnityPlayer.resume();
     }
 

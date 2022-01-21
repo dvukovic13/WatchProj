@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".UnityPlayerActivity"
+
+
+    >
+
+    <FrameLayout
+        android:id="@+id/unity_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/buttons_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/bJump"
+            android:layout_width="70pt"
+            android:layout_marginLeft="7.5pt"
+            android:layout_height="wrap_content"
+            android:text="Jump" />
+
+        <Button
+            android:id="@+id/bDie"
+            android:layout_width="70pt"
+            android:layout_marginLeft="7.5pt"
+            android:layout_height="wrap_content"
+            android:text="Death" />
+    </LinearLayout>
+</androidx.wear.widget.BoxInsetLayout>
