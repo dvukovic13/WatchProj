@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class MyController : MonoBehaviour
 {
-    public Button Jump, Death;
+   // public Button Jump, Death;
     public Animator Animator;
 
     System.Action<ITween<float>> hideButtonsTween;
@@ -19,7 +19,7 @@ public class MyController : MonoBehaviour
 
     private void Awake()
     {
-        hideButtonsTween = (t) =>
+     /*   hideButtonsTween = (t) =>
         {
             Color currentColor = Jump.GetComponent<RawImage>().color;
             Color textColor = Jump.GetComponentInChildren<TMP_Text>().color;
@@ -50,14 +50,14 @@ public class MyController : MonoBehaviour
             Death.GetComponent<RawImage>().color = currentColor;
             Death.GetComponentInChildren<TMP_Text>().color = textColor;
 
-        };
+        };*/
     }
 
 
     // Start is called before the first frame update
     void Start()
     {
-        Jump.onClick.AddListener(() =>
+     /*   Jump.onClick.AddListener(() =>
         {
             runAnim("Jump");
        
@@ -65,12 +65,12 @@ public class MyController : MonoBehaviour
         Death.onClick.AddListener(() =>
         {
             runAnim("Death");
-        });
+        });*/
 
     }
 
-    private void tweenShow(string anim) {
-        Animator.SetBool(anim, false);
+  /*  private void tweenShow(string anim) {
+        Animator.ResetTrigger(anim);
         Jump.gameObject.Tween("TweenButton", 0.0f, 1.0f, 1.0f, TweenScaleFunctions.CubicEaseIn, showButtonsTween);
     }
     private void runAnim(string anim)
@@ -78,7 +78,7 @@ public class MyController : MonoBehaviour
         
         buttonHidden = (t) =>
         {
-            Animator.SetBool(anim, true);
+            Animator.SetTrigger(anim);
             _animStarted = true;
             Jump.gameObject.SetActive(false);
             Death.gameObject.SetActive(false);
@@ -87,6 +87,12 @@ public class MyController : MonoBehaviour
         Jump.gameObject.Tween("TweenButton", 1.0f, 0.0f, 1.0f, TweenScaleFunctions.CubicEaseIn, hideButtonsTween, buttonHidden);
     }
 
+*/
+    public void runAnimExtern(string anim){
+        Animator.SetTrigger(anim);
+        _animStarted = true;
+
+    }
 
     // Update is called once per frame
     void Update()
@@ -95,8 +101,9 @@ public class MyController : MonoBehaviour
         {
             if(Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.7)
             {
-                Debug.Log("Animation " + Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name + " over");
-                tweenShow(Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name);
+                string animName = Animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+                Animator.ResetTrigger(animName);
+               // tweenShow(animName);
                 _animStarted = false;
             }
         }
